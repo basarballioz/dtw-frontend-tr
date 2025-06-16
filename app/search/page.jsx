@@ -157,7 +157,7 @@ export default function SearchPage() {
     setAnswer("");
     try {
       const payload = {
-        query: `merhaba müşterim bana parantez içerisindeki soruyu soruyor. Bu soruya decathlon.com.tr'yi baz alarak benim ağzımdan kısa bir chatbot cevabı verebilir misin? Bu cevapta decathlon.com.tr'yi ziyaret et ve ürünlerinden tavsiyeler ver. 3500 karakteri geçmesin. En fazla 3 link öner. Derin analiz yapabilirsin. (Soru: ${search}) Ürün arama dışındaki sorulara "bu konuda yardımcı olamıyorum :( şeklinde cevap ver, ürün aramaya yönlendir.`
+        query: `merhaba müşterim bana parantez içerisindeki soruyu soruyor. Bu soruya decathlon.com.tr'yi baz alarak benim ağzımdan kısa bir cevap verebilir misin? Bu cevapta decathlon.com.tr'yi ziyaret et ve ürünlerinden tavsiyeler ver. 3500 karakteri geçmesin. En fazla 3 link öner. Derin analiz yapabilirsin. (Soru: ${search}) Ürün arama dışındaki sorulara "bu konuda yardımcı olamıyorum :( şeklinde cevap ver, ürün aramaya yönlendir.`
       };
       const response = await fetch("https://my-ai-agent-243439967412.europe-west1.run.app/ask", {
         method: "POST",
