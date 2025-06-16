@@ -8,8 +8,8 @@ export default function AiSearchPage() {
       <Header />
       <Navigation categories={categories} />
       <div className="max-w-2xl mx-auto py-16 text-center">
-        <h2 className="text-3xl font-bold mb-4 text-purple-700">AI Destekli Arama</h2>
-        <p className="text-gray-700 mb-8">Doğal dilde arama yapın, yapay zeka sizin için en uygun ürünleri önersin. "Koşuya başlamak için ne gerekiyor?" gibi sorular sorabilirsiniz.</p>
+        <h2 className="text-3xl font-bold mb-4 text-purple-700">Spor Dünyası hakkında sohbet et</h2>
+        <p className="text-gray-700 mb-8">Sporlar hakkında istediğinizi sorun, AI size en uygun önerilerde bulunsun</p>
         <div className="bg-purple-50 rounded-xl p-8">Burada AI tabanlı arama arayüzü ve öneriler yer alacak.</div>
       </div>
     </div>

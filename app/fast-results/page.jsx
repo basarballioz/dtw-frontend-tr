@@ -8,8 +8,8 @@ export default function FastResultsPage() {
       <Header />
       <Navigation categories={categories} />
       <div className="max-w-2xl mx-auto py-16 text-center">
-        <h2 className="text-3xl font-bold mb-4 text-yellow-600">Hızlı Sonuçlar</h2>
-        <p className="text-gray-700 mb-8">En hızlı şekilde ihtiyacınıza uygun ürünleri görün. Saniyeler içinde sonuç alın, zamandan kazanın!</p>
+        <h2 className="text-3xl font-bold mb-4 text-yellow-600">Belirli bir ürün hakkında yorum analizi yap</h2>
+        <p className="text-gray-700 mb-8">İhtiyacınıza uygun ürünleri saniyeler içinde görün</p>
         <div className="bg-yellow-50 rounded-xl p-8">Burada hızlı sonuçlar ve öneriler arayüzü yer alacak.</div>
       </div>
     </div>
