@@ -65,7 +65,7 @@ function renderMarkdown(md) {
     // Başlıklar
     if (/^\d+\.\s+(.+)/.test(line)) {
       if (listBuffer.length) {
-        elements.push(<ul key={"ul-"+idx}>{listBuffer}</ul>);
+        elements.push(<ul key={"ul-" + idx}>{listBuffer}</ul>);
         listBuffer = [];
       }
       elements.push(<div key={idx} className="font-bold text-blue-700 text-lg mt-4">{parseInline(line)}</div>);
@@ -73,7 +73,7 @@ function renderMarkdown(md) {
     }
     if (/^\*\*(.+)\*\*$/.test(line)) {
       if (listBuffer.length) {
-        elements.push(<ul key={"ul-"+idx}>{listBuffer}</ul>);
+        elements.push(<ul key={"ul-" + idx}>{listBuffer}</ul>);
         listBuffer = [];
       }
       elements.push(<div key={idx} className="font-bold text-blue-700 text-lg mt-2">{parseInline(line.replace(/^\*\*|\*\*$/g, ""))}</div>);
@@ -81,7 +81,7 @@ function renderMarkdown(md) {
     }
     if (/^#+\s?(.+)/.test(line)) {
       if (listBuffer.length) {
-        elements.push(<ul key={"ul-"+idx}>{listBuffer}</ul>);
+        elements.push(<ul key={"ul-" + idx}>{listBuffer}</ul>);
         listBuffer = [];
       }
       elements.push(<div key={idx} className="font-bold text-blue-700 text-lg mt-2">{parseInline(line.replace(/^#+\s?/, ""))}</div>);
@@ -94,7 +94,7 @@ function renderMarkdown(md) {
     }
     // Liste bitişi
     if (listBuffer.length) {
-      elements.push(<ul key={"ul-"+idx}>{listBuffer}</ul>);
+      elements.push(<ul key={"ul-" + idx}>{listBuffer}</ul>);
       listBuffer = [];
     }
     // Normal paragraf (bold/italic inline parse)
@@ -122,7 +122,7 @@ function parseInline(text) {
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
     }
-    parts.push(<b key={"b-"+match.index}>{match[1]}</b>);
+    parts.push(<b key={"b-" + match.index}>{match[1]}</b>);
     lastIndex = match.index + match[0].length;
   }
   if (lastIndex < text.length) {
@@ -135,7 +135,7 @@ function parseInline(text) {
     let m;
     while ((m = italicRegex.exec(part)) !== null) {
       if (m.index > last) italics.push(part.slice(last, m.index));
-      italics.push(<i key={"i-"+i+"-"+m.index}>{m[1]}</i>);
+      italics.push(<i key={"i-" + i + "-" + m.index}>{m[1]}</i>);
       last = m.index + m[0].length;
     }
     if (last < part.length) italics.push(part.slice(last));
@@ -157,7 +157,7 @@ export default function SearchPage() {
     setAnswer("");
     try {
       const payload = {
-        query: `merhaba müşterim bana parantez içerisindeki soruyu soruyor. Bu soruya decathlon.com.tr'yi baz alarak benim ağzımdan kısa bir chatbot cevabı verebilir misin? Bu cevapta decathlon.com.tr'yi ziyaret et ve ürünlerinden ve kategorilerinden tavsiyeler ver. Bu kategoriler bulletlist şeklinde olsun. 3500 karakteri geçmesin. Ürün linkleri (decathlon.com.tr'yi tarayarak) de eklemen şarttır ürün sayfası 404 veriyorsa o sayfayı gösterme. En fazla 3 link öner. Derin analiz yapabilirsin. (Soru: ${search})`
+        query: `merhaba müşterim bana parantez içerisindeki soruyu soruyor. Bu soruya decathlon.com.tr'yi baz alarak benim ağzımdan kısa bir chatbot cevabı verebilir misin? Bu cevapta decathlon.com.tr'yi ziyaret et ve ürünlerinden tavsiyeler ver. 3500 karakteri geçmesin. En fazla 3 link öner. Derin analiz yapabilirsin. (Soru: ${search}) Ürün arama dışındaki sorulara "bu konuda yardımcı olamıyorum :( şeklinde cevap ver, ürün aramaya yönlendir.`
       };
       const response = await fetch("https://my-ai-agent-243439967412.europe-west1.run.app/ask", {
         method: "POST",
