@@ -65,52 +65,28 @@ function renderMarkdown(md) {
 }
 
 // Inline bold/italic parser: **kalın**, *italik* ve [link metni](url) ifadeleri her yerde işler
-function parseInline(text) {
-  if (!text) return null;
-
+export function parseInline(text) {
   const parts = [];
-  // Regex to match bold (**text**), italic (*text*), and links ([text](url))
-  const regex = /(\*{2}[^\*]+\*{2}|\*[^\*]+\*|\[[^\]]+\]\([^\)]+\))/g;
   let lastIndex = 0;
   let match;
 
-  while ((match = regex.exec(text)) !== null) {
+  // Bold pattern
+  const boldRegex = /\*\*(.*?)\*\*/g;
+  while ((match = boldRegex.exec(text)) !== null) {
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
     }
-    const fullMatch = match[0];
-    if (fullMatch.startsWith('**') && fullMatch.endsWith('**')) {
-      parts.push(<b key={"b-" + match.index}>{fullMatch.slice(2, -2)}</b>);
-    } else if (fullMatch.startsWith('*') && fullMatch.endsWith('*')) {
-      parts.push(<i key={"i-" + match.index}>{fullMatch.slice(1, -1)}</i>);
-    } else if (fullMatch.startsWith('[') && fullMatch.includes('](') && fullMatch.endsWith(')')) {
-      const linkMatch = fullMatch.match(/\[([^\]]+)\]\(([^\)]+)\)/);
-      if (linkMatch) {
-        const linkText = linkMatch[1];
-        const linkUrl = linkMatch[2];
-        parts.push(<a key={"a-" + match.index} href={linkUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{linkText}</a>);
-      }
-    } else {
-      // If it's a match but not one of our specific markdown types, push as plain text
-      parts.push(fullMatch);
-    }
-    lastIndex = match.index + fullMatch.length;
+    parts.push(<b key={`bold-${match.index}`}>{match[1]}</b>);
+    lastIndex = boldRegex.lastIndex;
   }
 
+  // Add remaining text
   if (lastIndex < text.length) {
     parts.push(text.slice(lastIndex));
   }
 
-  // Flatten the array and ensure all elements are properly rendered (e.g., handle nested markdown if desired)
-  return parts.flatMap((part, i) => {
-    if (typeof part === 'string') {
-      // This recursive call handles cases where bold/italic might be within link text,
-      // or vice-versa, though the regex prioritizes the outermost markdown.
-      // For a truly robust solution, a proper markdown parser library would be ideal.
-      return parseInline(part);
-    }
-    return part;
-  });
+  // Simply return the parts array - no recursion needed
+  return parts;
 }
 
 export default function SearchPageWrapper() {
@@ -196,4 +172,4 @@ function SearchPage() {
       </div>
     </div>
   )
-} 
+}
