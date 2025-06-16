@@ -4,7 +4,13 @@ export const categories = [
   "Tenis",
   "Yüzme",
   "Bisiklet",
-  "Dağcılık"
+  "Dağcılık",
+  "Spor Dünyası",
+  "Fitness",
+  "Powerlifting",
+  "Binicilik",
+  "Bisiklet",
+  "Decathlon Member"
 ];
 
 export const searchExamples = [
