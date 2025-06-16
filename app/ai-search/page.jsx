@@ -64,41 +64,53 @@ function renderMarkdown(md) {
   );
 }
 
-// Inline bold/italic parser: **kalın** ve *italik* ifadeleri her yerde işler
+// Inline bold/italic parser: **kalın**, *italik* ve [link metni](url) ifadeleri her yerde işler
 function parseInline(text) {
   if (!text) return null;
-  // Önce bold, sonra italic
-  const boldRegex = /\*\*(.+?)\*\*/g;
-  const italicRegex = /\*(.+?)\*/g;
-  let parts = [];
+
+  const parts = [];
+  // Regex to match bold (**text**), italic (*text*), and links ([text](url))
+  const regex = /(\*{2}[^\*]+\*{2}|\*[^\*]+\*|\[[^\]]+\]\([^\)]+\))/g;
   let lastIndex = 0;
   let match;
-  // Bold parçala
-  while ((match = boldRegex.exec(text)) !== null) {
+
+  while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
     }
-    parts.push(<b key={"b-"+match.index}>{match[1]}</b>);
-    lastIndex = match.index + match[0].length;
+    const fullMatch = match[0];
+    if (fullMatch.startsWith('**') && fullMatch.endsWith('**')) {
+      parts.push(<b key={"b-" + match.index}>{fullMatch.slice(2, -2)}</b>);
+    } else if (fullMatch.startsWith('*') && fullMatch.endsWith('*')) {
+      parts.push(<i key={"i-" + match.index}>{fullMatch.slice(1, -1)}</i>);
+    } else if (fullMatch.startsWith('[') && fullMatch.includes('](') && fullMatch.endsWith(')')) {
+      const linkMatch = fullMatch.match(/\[([^\]]+)\]\(([^\)]+)\)/);
+      if (linkMatch) {
+        const linkText = linkMatch[1];
+        const linkUrl = linkMatch[2];
+        parts.push(<a key={"a-" + match.index} href={linkUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{linkText}</a>);
+      }
+    } else {
+      // If it's a match but not one of our specific markdown types, push as plain text
+      parts.push(fullMatch);
+    }
+    lastIndex = match.index + fullMatch.length;
   }
+
   if (lastIndex < text.length) {
     parts.push(text.slice(lastIndex));
   }
-  // Şimdi her parçayı italic için işle
-  parts = parts.flatMap((part, i) => {
-    if (typeof part !== "string") return part;
-    const italics = [];
-    let last = 0;
-    let m;
-    while ((m = italicRegex.exec(part)) !== null) {
-      if (m.index > last) italics.push(part.slice(last, m.index));
-      italics.push(<i key={"i-"+i+"-"+m.index}>{m[1]}</i>);
-      last = m.index + m[0].length;
+
+  // Flatten the array and ensure all elements are properly rendered (e.g., handle nested markdown if desired)
+  return parts.flatMap((part, i) => {
+    if (typeof part === 'string') {
+      // This recursive call handles cases where bold/italic might be within link text,
+      // or vice-versa, though the regex prioritizes the outermost markdown.
+      // For a truly robust solution, a proper markdown parser library would be ideal.
+      return parseInline(part);
     }
-    if (last < part.length) italics.push(part.slice(last));
-    return italics;
+    return part;
   });
-  return parts;
 }
 
 export default function SearchPageWrapper() {

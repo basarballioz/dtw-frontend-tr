@@ -110,36 +110,111 @@ function renderMarkdown(md) {
   );
 }
 
-// Inline bold/italic parser: **kalın** ve *italik* ifadeleri işler
+// Inline bold/italic parser: **kalın**, *italik* ve [link metni](url) ifadeleri işler
 function parseInline(text) {
   if (!text) return null;
-  const boldRegex = /\*\*(.+?)\*\*/g;
-  const italicRegex = /\*(.+?)\*/g;
-  let parts = [];
+
+  const parts = [];
+  const regex = /(\*{2}[^\*]+\*{2}|\*[^\*]+\*|\[[^\]]+\]\([^\)]+\))/g;
   let lastIndex = 0;
   let match;
-  while ((match = boldRegex.exec(text)) !== null) {
+
+  while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
     }
-    parts.push(<b key={"b-" + match.index}>{match[1]}</b>);
-    lastIndex = match.index + match[0].length;
+    const fullMatch = match[0];
+    if (fullMatch.startsWith('**') && fullMatch.endsWith('**')) {
+      parts.push(<b key={"b-" + match.index}>{fullMatch.slice(2, -2)}</b>);
+    } else if (fullMatch.startsWith('*') && fullMatch.endsWith('*')) {
+      parts.push(<i key={"i-" + match.index}>{fullMatch.slice(1, -1)}</i>);
+    } else if (fullMatch.startsWith('[') && fullMatch.includes('](') && fullMatch.endsWith(')')) {
+      const linkMatch = fullMatch.match(/\[([^\]]+)\]\(([^\)]+)\)/);
+      if (linkMatch) {
+        const linkText = linkMatch[1];
+        const linkUrl = linkMatch[2];
+        parts.push(<a key={"a-" + match.index} href={linkUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{linkText}</a>);
+      }
+    } else {
+      parts.push(fullMatch);
+    }
+    lastIndex = match.index + fullMatch.length;
   }
+
   if (lastIndex < text.length) {
     parts.push(text.slice(lastIndex));
   }
-  parts = parts.flatMap((part, i) => {
-    if (typeof part !== "string") return part;
-    const italics = [];
-    let last = 0;
-    let m;
-    while ((m = italicRegex.exec(part)) !== null) {
-      if (m.index > last) italics.push(part.slice(last, m.index));
-      italics.push(<i key={"i-" + i + "-" + m.index}>{m[1]}</i>);
-      last = m.index + m[0].length;
+
+  // Recursively parse any remaining parts for nested inline elements
+  return parts.map((part, i) => {
+    if (typeof part === 'string') {
+      // This is a simplified recursive call for demonstration. 
+      // For robust nested parsing, you'd need a more complex tokenizer/parser.
+      // For now, it will re-process bold/italic/links that might be inside a link text (though less common).
+      return parseInlineInner(part, i); 
     }
-    if (last < part.length) italics.push(part.slice(last));
-    return italics;
+    return part;
+  });
+}
+
+// Helper function for recursive inline parsing to handle nesting
+function parseInlineInner(text, keyPrefix) {
+  if (!text) return null;
+  const boldRegex = /\*\*(.+?)\*\*/g;
+  const italicRegex = /\*(.+?)\*/g;
+  const linkRegex = /\[([^\]]+)\]\(([^\)]+)\)/g;
+
+  let parts = [];
+  let lastIndex = 0;
+  let match;
+
+  const processText = (startIndex, endIndex) => {
+    if (endIndex > startIndex) {
+      parts.push(text.slice(startIndex, endIndex));
+    }
+  };
+
+  // Process links first to avoid issues with bold/italic inside links
+  while ((match = linkRegex.exec(text)) !== null) {
+    processText(lastIndex, match.index);
+    const linkText = match[1];
+    const linkUrl = match[2];
+    parts.push(<a key={`a-${keyPrefix}-${match.index}`} href={linkUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{linkText}</a>);
+    lastIndex = match.index + match[0].length;
+  }
+  processText(lastIndex, text.length);
+
+  // Now process bold and italic on the resulting parts, ensuring not to re-process <a> tags
+  parts = parts.flatMap((part, i) => {
+    if (typeof part !== 'string') return part; // Skip non-string (already processed) parts
+
+    const boldItalicParts = [];
+    let currentLastIndex = 0;
+    let boldMatch;
+    while ((boldMatch = boldRegex.exec(part)) !== null) {
+      if (boldMatch.index > currentLastIndex) {
+        boldItalicParts.push(part.slice(currentLastIndex, boldMatch.index));
+      }
+      boldItalicParts.push(<b key={`b-${keyPrefix}-${i}-${boldMatch.index}`}>{boldMatch[1]}</b>);
+      currentLastIndex = boldMatch.index + boldMatch[0].length;
+    }
+    if (currentLastIndex < part.length) {
+      boldItalicParts.push(part.slice(currentLastIndex));
+    }
+
+    return boldItalicParts.flatMap((subPart, j) => {
+      if (typeof subPart !== 'string') return subPart;
+      const italics = [];
+      let italicLast = 0;
+      let italicMatch;
+      while ((italicMatch = italicRegex.exec(subPart)) !== null) {
+        if (italicMatch.index > italicLast) italics.push(subPart.slice(italicLast, italicMatch.index));
+        italics.push(<i key={`i-${keyPrefix}-${i}-${j}-${italicMatch.index}`}>{italicMatch[1]}</i>);
+        italicLast = italicMatch.index + italicMatch[0].length;
+      }
+      if (italicLast < subPart.length) italics.push(subPart.slice(italicLast));
+      return italics;
+    });
   });
   return parts;
 }
