@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, User, Heart, ShoppingCart } from "lucide-react"
+import { Search, User, Heart, ShoppingCart, Sparkles, Settings2, Star, ShoppingCart as CartIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -12,22 +12,23 @@ import { mockProducts } from "..//data/constants"
 export default function Header() {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [suggestion, setSuggestion] = useState(null);
+  const [aiMode, setAiMode] = useState(true);
+  const [suggestions, setSuggestions] = useState([]);
 
   function handleInputChange(e) {
     const value = e.target.value;
     setSearch(value);
     if (value.trim()) {
-      // Arama kelimesiyle adı veya kategorisi eşleşen ilk ürünü bul
       const lower = value.toLowerCase();
-      const found = mockProducts.find(
+      // En az 3 ürün önerisi için filtrele
+      const found = mockProducts.filter(
         (p) =>
           p.name.toLowerCase().includes(lower) ||
           p.category.toLowerCase().includes(lower)
-      );
-      setSuggestion(found || null);
+      ).slice(0, 5); // max 5 öneri
+      setSuggestions(found);
     } else {
-      setSuggestion(null);
+      setSuggestions([]);
     }
   }
 
@@ -67,39 +68,67 @@ export default function Header() {
 
           <div className="flex-1 max-w-2xl mx-0 md:mx-8 order-2 md:order-none w-full">
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <div className="flex items-center gap-2 absolute inset-y-0 left-0 pl-3 z-10">
                 <Search className="h-5 w-5 text-gray-400" />
               </div>
               <Input
                 type="text"
                 placeholder="ayakkabı"
-                className="pl-10 pr-20 py-3 w-full rounded-full border-2 border-purple-200 focus:border-purple-400"
+                className="pl-10 pr-36 py-3 w-full rounded-full border-2 border-purple-200 focus:border-purple-400 bg-white shadow-md"
                 value={search}
                 onChange={handleInputChange}
               />
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 space-x-2">
-                <Badge variant="outline" className="text-purple-600 border-purple-300">
-                  AI
-                </Badge>
-                <Button size="sm" className="rounded-full bg-purple-600 hover:bg-purple-700">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 gap-2 z-10">
+                <div className="flex items-center gap-1 bg-gray-100 rounded-full px-2 py-1 cursor-pointer border border-gray-200" onClick={() => setAiMode(!aiMode)}>
+                  <Sparkles className={`h-4 w-4 ${aiMode ? 'text-purple-600' : 'text-gray-400'}`} />
+                  <span className={`text-xs font-semibold ${aiMode ? 'text-purple-600' : 'text-gray-400'}`}>AI</span>
+                  <span className={`relative inline-block w-8 h-4 mx-1 bg-gray-300 rounded-full transition-colors duration-200 ${aiMode ? 'bg-purple-400' : 'bg-gray-300'}`}> <span className={`absolute left-0 top-0 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${aiMode ? 'translate-x-4' : ''}`}></span> </span>
+                </div>
+                <Button size="sm" className="rounded-full bg-purple-600 hover:bg-purple-700 shadow-md">
                   <Search className="h-4 w-4" />
                 </Button>
               </div>
-              {search && suggestion && (
-                <div className="absolute left-0 right-0 mt-2 bg-gray-50 border rounded-xl p-4 shadow max-w-xl w-full mx-auto z-50" style={{top: '100%'}}>
-                  <div className="flex items-center gap-4">
-                    <img src={suggestion.image} alt={suggestion.name} className="w-16 h-16 object-cover rounded-lg border" />
-                    <div className="text-left">
-                      <div className="font-bold text-lg text-blue-700">{suggestion.name}</div>
-                      <div className="text-sm text-gray-600 mb-1">{suggestion.category}</div>
-                      <div className="text-gray-700 text-sm mb-2">{suggestion.description}</div>
+              {search && suggestions.length > 0 && (
+                <div className="absolute left-0 right-0 mt-2 bg-white border rounded-2xl p-0 shadow-2xl max-w-2xl w-full mx-auto z-50 animate-fade-in" style={{top: '100%'}}>
+                  <div className="px-6 pt-4 pb-2 border-b">
+                    <div className="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-purple-500" />
+                      Neural öneriler
                     </div>
+                    <ul className="mb-2">
+                      {suggestions.slice(0, 4).map((p, i) => (
+                        <li key={i} className="flex items-center gap-2 py-1 text-gray-700 hover:text-purple-700 cursor-pointer text-sm">
+                          <Search className="h-4 w-4 text-gray-300" />
+                          {p.name}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="mt-3">
-                    <div className="font-semibold text-purple-700 mb-2">Yapay Zeka Destekli Sorular:</div>
-                    <ul className="list-disc pl-5 space-y-1">
-                      {suggestion.aiQuestions.map((q, i) => (
-                        <li key={i} className="text-gray-800">{q}</li>
+                  <div className="px-6 pt-2 pb-4">
+                    <div className="text-xs font-semibold text-gray-500 mb-2 flex items-center gap-2">
+                      <CartIcon className="h-4 w-4 text-blue-500" />
+                      Quantum öneriler
+                    </div>
+                    <ul>
+                      {suggestions.slice(0, 3).map((p, i) => (
+                        <li key={i} className="flex items-center gap-4 py-3 border-b last:border-b-0">
+                          <img src={p.image} alt={p.name} className="w-12 h-12 object-cover rounded-lg border" />
+                          <div className="flex-1 min-w-0">
+                            <div className="font-semibold text-sm text-gray-900 truncate">{p.name}</div>
+                            <div className="text-xs text-gray-500 truncate">{p.category}</div>
+                            <div className="text-xs text-gray-700 mt-1">{p.description}</div>
+                          </div>
+                          <div className="flex flex-col items-end min-w-[80px]">
+                            <div className="font-bold text-blue-700 text-sm">{(p.price || '₺899,99')}</div>
+                            <div className="flex items-center gap-1 text-xs text-yellow-500">
+                              <Star className="h-3 w-3" />
+                              {(p.rating || '4.8')}
+                            </div>
+                          </div>
+                          <Button size="icon" variant="ghost" className="ml-2">
+                            <CartIcon className="h-5 w-5 text-purple-600" />
+                          </Button>
+                        </li>
                       ))}
                     </ul>
                   </div>
