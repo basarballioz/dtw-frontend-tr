@@ -3,10 +3,11 @@
 import Header from "../components/Header";
 import Navigation from "../components/Navigation";
 import { categories } from "../data/constants";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sparkles } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 // Gelişmiş markdown parser: ardışık <li> elemanlarını <ul> ile sarmalar, başlıkları ve bold/italicleri destekler
 function renderMarkdown(md) {
@@ -106,16 +107,34 @@ export default function AiSearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function askAI(e) {
-    e.preventDefault();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const q = searchParams.get("query");
+    if (q) {
+      setQuery(q);
+      askAI(null, q); // Call askAI with the query from URL
+    }
+  }, [searchParams]);
+
+  async function askAI(e, forcedQuery) {
+    if (e) e.preventDefault(); // Prevent default if event object is passed
     setLoading(true);
     setError("");
     setAnswer("");
+
+    const currentQuery = forcedQuery !== undefined ? forcedQuery : query;
+
+    if (!currentQuery) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch("https://my-ai-agent-243439967412.europe-west1.run.app/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query })
+        body: JSON.stringify({ query: currentQuery })
       });
       const data = await response.json();
       setAnswer(data.answer || "Cevap alınamadı.");

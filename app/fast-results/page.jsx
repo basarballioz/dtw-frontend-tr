@@ -96,19 +96,6 @@ function parseInline(text) {
   return parts;
 }
 
-// Ürün adını Decathlon yorum API'sinden çek
-async function fetchProductInfo(sku) {
-  const url = `https://www.decathlon.com.tr/tr/ajax/nfs/openvoice/reviews/product/${sku}`;
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-    const productName = data.subject?.label || '';
-    return productName;
-  } catch {
-    return '';
-  }
-}
-
 export default function FastResultsPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -120,9 +107,7 @@ export default function FastResultsPage() {
     setLoading(true);
     setResult(null);
     setError("");
-    // Önce ürün adını çek
-    const productName = await fetchProductInfo(sku);
-    const prompt = `Ürün adı: ${productName}\nSKU: ${sku}\n${sku} için https://www.decathlon.com.tr/tr/ajax/nfs/openvoice/reviews/product/${sku} adresindeki yorumları analiz et.\n1. Genel memnuniyet skorunu (0-100 arası yüzde olarak) ve sentimenti net şekilde yaz.\n2. En fazla 3 maddeyle özet müşteri yorumu çıkar.\n3. Yanıtı çok kısa ve özet tut, 3-4 satırı geçmesin.`;
+    const prompt = `https://www.decathlon.com.tr/tr/ajax/nfs/openvoice/reviews/product/${sku} API isteği at, yorumları analiz et, ürün bilgisini ("isim" vs.) mutlaka çek. Genel memnuniyet skorunu ("averageAttributeRating" ile çekebilirsin) ve sentimenti net şekilde yaz (olumlu/olumsuz 2-3 madde). Yanıtı kısa ve özet tut, 3-4 satırı geçmesin. Do deep-research.`;
     try {
       const response = await fetch("https://my-ai-agent-243439967412.europe-west1.run.app/ask", {
         method: "POST",
