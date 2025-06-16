@@ -37,10 +37,10 @@ function ProductCard({ title, link }) {
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex flex-col sm:flex-row items-center gap-4 border border-gray-200 rounded-xl p-4 mb-4 bg-white shadow hover:shadow-lg transition group"
+      className="flex flex-col sm:flex-row items-center gap-4 border border-gray-200 rounded-xl p-6 mb-4 bg-white shadow-md hover:shadow-lg transition group"
       style={{ textDecoration: "none" }}
     >
-      <div className="flex-shrink-0 w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+      <div className="flex-shrink-0 w-24 h-24 bg-blue-50 rounded-lg overflow-hidden flex items-center justify-center border border-blue-200">
         <img
           src="/placeholder.png"
           alt={title}
@@ -48,8 +48,8 @@ function ProductCard({ title, link }) {
         />
       </div>
       <div className="flex-1 text-left">
-        <div className="font-bold text-blue-700 text-lg group-hover:underline">{title}</div>
-        <div className="text-xs text-gray-500 break-all">{link}</div>
+        <div className="font-bold text-blue-800 text-xl group-hover:underline">{title}</div>
+        <div className="text-sm text-gray-600 break-all">{link}</div>
       </div>
     </a>
   );
@@ -185,19 +185,19 @@ export default function SearchPage() {
         <div className="bg-gray-100 rounded-xl p-8">
           <form
             onSubmit={handleSearch}
-            className="flex flex-col md:flex-row gap-4 items-center justify-center mb-4"
+            className="flex flex-col md:flex-row gap-4 items-center justify-center mb-6"
           >
             <input
               type="text"
-              placeholder="Ürün veya kategori ara..."
+              placeholder="Ürün veya kategori arayın..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="flex-1 min-w-0 text-base px-4 py-3 rounded-full border-2 border-blue-200 focus:border-blue-400 bg-white shadow"
+              className="flex-1 w-full md:w-auto text-base px-5 py-3 rounded-full border-2 border-blue-300 focus:border-blue-500 bg-white shadow-sm placeholder-gray-500"
               required
             />
             <button
               type="submit"
-              className="rounded-full bg-blue-600 hover:bg-blue-700 px-6 py-3 text-base font-semibold text-white shadow-md"
+              className="rounded-full bg-blue-600 hover:bg-blue-700 px-8 py-3 text-base font-semibold text-white shadow-md transition-colors duration-200"
               disabled={loading}
             >
               {loading ? "Aranıyor..." : "Ara"}

@@ -3,7 +3,7 @@
 import Header from "../components/Header";
 import Navigation from "../components/Navigation";
 import { categories } from "../data/constants";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sparkles } from "lucide-react";
@@ -101,7 +101,16 @@ function parseInline(text) {
   return parts;
 }
 
-export default function AiSearchPage() {
+export default function SearchPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchPage />
+    </Suspense>
+  );
+}
+
+function SearchPage() {
+  const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
