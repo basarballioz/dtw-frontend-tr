@@ -16,7 +16,7 @@ export default function SearchExamples({ examples }) {
           <Button
             key={index}
             variant="outline"
-            className="rounded-full bg-white hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700"
+            className="rounded-full bg-white hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700"
             onClick={() => handleExampleClick(example)}
           >
             {example}

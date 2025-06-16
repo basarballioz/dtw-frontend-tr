@@ -13,7 +13,7 @@ export default function Navigation({ categories }) {
             <Button
               key={index}
               variant="ghost"
-              className="whitespace-nowrap text-gray-700 hover:text-purple-600 hover:bg-purple-50"
+              className="whitespace-nowrap text-gray-700 hover:text-blue-600 hover:bg-blue-50"
               onClick={() => router.push(`/category/${encodeURIComponent(category)}`)}
             >
               {category}

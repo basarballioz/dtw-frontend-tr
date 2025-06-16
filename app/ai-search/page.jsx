@@ -22,7 +22,7 @@ function renderMarkdown(md) {
         elements.push(<ul key={"ul-"+idx}>{listBuffer}</ul>);
         listBuffer = [];
       }
-      elements.push(<div key={idx} className="font-bold text-purple-700 text-lg mt-4">{parseInline(line)}</div>);
+      elements.push(<div key={idx} className="font-bold text-blue-700 text-lg mt-4">{parseInline(line)}</div>);
       return;
     }
     if (/^\*\*(.+)\*\*$/.test(line)) {
@@ -30,7 +30,7 @@ function renderMarkdown(md) {
         elements.push(<ul key={"ul-"+idx}>{listBuffer}</ul>);
         listBuffer = [];
       }
-      elements.push(<div key={idx} className="font-bold text-purple-700 text-lg mt-2">{parseInline(line.replace(/^\*\*|\*\*$/g, ""))}</div>);
+      elements.push(<div key={idx} className="font-bold text-blue-700 text-lg mt-2">{parseInline(line.replace(/^\*\*|\*\*$/g, ""))}</div>);
       return;
     }
     if (/^#+\s?(.+)/.test(line)) {
@@ -38,7 +38,7 @@ function renderMarkdown(md) {
         elements.push(<ul key={"ul-"+idx}>{listBuffer}</ul>);
         listBuffer = [];
       }
-      elements.push(<div key={idx} className="font-bold text-purple-700 text-lg mt-2">{parseInline(line.replace(/^#+\s?/, ""))}</div>);
+      elements.push(<div key={idx} className="font-bold text-blue-700 text-lg mt-2">{parseInline(line.replace(/^#+\s?/, ""))}</div>);
       return;
     }
     // Liste
@@ -171,9 +171,9 @@ function SearchPage() {
       <Header />
       <Navigation categories={categories} />
       <div className="max-w-2xl mx-auto py-16 text-center">
-        <h2 className="text-3xl font-bold mb-4 text-purple-700 flex items-center justify-center gap-2"><Sparkles className="h-7 w-7 text-purple-400 animate-spin-slow" />Spor Dünyası hakkında sohbet et</h2>
+        <h2 className="text-3xl font-bold mb-4 text-blue-700 flex items-center justify-center gap-2"><Sparkles className="h-7 w-7 text-blue-400 animate-spin-slow" />Spor Dünyası hakkında sohbet et</h2>
         <p className="text-gray-700 mb-8">Sporlar hakkında istediğinizi sorun, AI size en uygun önerilerde bulunsun</p>
-        <div className="bg-purple-50 rounded-xl p-8">
+        <div className="bg-blue-50 rounded-xl p-8">
           <form onSubmit={askAI} className="flex flex-col md:flex-row gap-4 items-center justify-center mb-6">
             <Input
               id="queryInput"
@@ -181,14 +181,14 @@ function SearchPage() {
               placeholder="Sporla ilgili bir soru sor..."
               value={query}
               onChange={e => setQuery(e.target.value)}
-              className="flex-1 min-w-0 text-base px-4 py-3 rounded-full border-2 border-purple-200 focus:border-purple-400 bg-white shadow"
+              className="flex-1 min-w-0 text-base px-4 py-3 rounded-full border-2 border-blue-200 focus:border-blue-400 bg-white shadow"
               required
             />
-            <Button type="submit" className="rounded-full bg-purple-600 hover:bg-purple-700 px-6 py-3 text-base font-semibold shadow-md" disabled={loading}>
+            <Button type="submit" className="rounded-full bg-blue-600 hover:bg-blue-700 px-6 py-3 text-base font-semibold shadow-md" disabled={loading}>
               {loading ? "Düşünüyor..." : "Sor"}
             </Button>
           </form>
-          <div id="result" className="min-h-[48px] text-left text-base bg-white rounded-xl p-4 shadow-inner border border-purple-100">
+          <div id="result" className="min-h-[48px] text-left text-base bg-white rounded-xl p-4 shadow-inner border border-blue-100">
             {error && <span className="text-red-600">{error}</span>}
             {!error && answer && renderMarkdown(answer)}
           </div>

@@ -135,6 +135,10 @@
   animation: spin-slow 3s linear infinite;
 }
 
+.animate-spin-fast {
+  animation: spin-slow .5s linear infinite;
+}
+
 .animate-ai-glow {
   animation: ai-glow 2s ease-in-out infinite;
 }

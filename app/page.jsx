@@ -14,7 +14,7 @@ export default function Home() {
       <main className="container mx-auto px-4 py-12">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Arama yapmak için yukarıdaki <span className="text-purple-600">AI destekli arama</span> özelliğini kullanın
+            Arama yapmak için yukarıdaki <span className="text-blue-600">AI destekli arama</span> özelliğini kullanın
           </h1>
           <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
             Normal arama veya AI destekli arama arasında geçiş yapabilir, aradığınız ürünlere hızlıca ulaşabilirsiniz.
