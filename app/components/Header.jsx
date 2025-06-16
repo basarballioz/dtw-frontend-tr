@@ -18,9 +18,14 @@ export default function Header() {
     const value = e.target.value;
     setSearch(value);
     if (value.trim()) {
-      // Pick a random product for demo
-      const randomProduct = mockProducts[Math.floor(Math.random() * mockProducts.length)];
-      setSuggestion(randomProduct);
+      // Arama kelimesiyle adı veya kategorisi eşleşen ilk ürünü bul
+      const lower = value.toLowerCase();
+      const found = mockProducts.find(
+        (p) =>
+          p.name.toLowerCase().includes(lower) ||
+          p.category.toLowerCase().includes(lower)
+      );
+      setSuggestion(found || null);
     } else {
       setSuggestion(null);
     }
