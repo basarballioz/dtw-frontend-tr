@@ -6,9 +6,26 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { mockProducts } from "..//data/constants"
 
 export default function Header() {
   const router = useRouter();
+  const [search, setSearch] = useState("");
+  const [suggestion, setSuggestion] = useState(null);
+
+  function handleInputChange(e) {
+    const value = e.target.value;
+    setSearch(value);
+    if (value.trim()) {
+      // Pick a random product for demo
+      const randomProduct = mockProducts[Math.floor(Math.random() * mockProducts.length)];
+      setSuggestion(randomProduct);
+    } else {
+      setSuggestion(null);
+    }
+  }
+
   return (
     <header className="bg-white border-b">
       <div className="container mx-auto px-4 py-4">
@@ -49,6 +66,8 @@ export default function Header() {
                 type="text"
                 placeholder="ayakkabı"
                 className="pl-10 pr-20 py-3 w-full rounded-full border-2 border-purple-200 focus:border-purple-400"
+                value={search}
+                onChange={handleInputChange}
               />
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 space-x-2">
                 <Badge variant="outline" className="text-purple-600 border-purple-300">
@@ -58,6 +77,26 @@ export default function Header() {
                   <Search className="h-4 w-4" />
                 </Button>
               </div>
+              {search && suggestion && (
+                <div className="absolute left-0 right-0 mt-2 bg-gray-50 border rounded-xl p-4 shadow max-w-xl w-full mx-auto z-50" style={{top: '100%'}}>
+                  <div className="flex items-center gap-4">
+                    <img src={suggestion.image} alt={suggestion.name} className="w-16 h-16 object-cover rounded-lg border" />
+                    <div className="text-left">
+                      <div className="font-bold text-lg text-blue-700">{suggestion.name}</div>
+                      <div className="text-sm text-gray-600 mb-1">{suggestion.category}</div>
+                      <div className="text-gray-700 text-sm mb-2">{suggestion.description}</div>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className="font-semibold text-purple-700 mb-2">Yapay Zeka Destekli Sorular:</div>
+                    <ul className="list-disc pl-5 space-y-1">
+                      {suggestion.aiQuestions.map((q, i) => (
+                        <li key={i} className="text-gray-800">{q}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

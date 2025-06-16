@@ -17,12 +17,12 @@ export default function FeatureCards() {
       </div>
 
       <div
-        className="bg-white rounded-2xl p-8 shadow-lg border-2 border-purple-200 relative overflow-hidden cursor-pointer"
+        className="bg-white rounded-2xl p-8 shadow-lg border-2 relative overflow-hidden cursor-pointer animate-ai-glow"
         onClick={() => router.push("/ai-search")}
       >
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-blue-500"></div>
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r"></div>
         <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Brain className="h-8 w-8 text-purple-600" />
+          <Brain className="h-8 w-8 text-purple-600 animate-spin-slow" />
         </div>
         <h3 className="text-xl font-semibold text-gray-900 mb-4">Spor Dünyası hakkında sohbet et</h3>
         <p className="text-gray-600">Sporlar hakkında istediğinizi sorun, AI size en uygun önerilerde bulunsun</p>
