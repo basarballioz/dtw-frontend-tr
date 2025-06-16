@@ -107,7 +107,7 @@ export default function FastResultsPage() {
     setLoading(true);
     setResult(null);
     setError("");
-    const prompt = `https://www.decathlon.com.tr/tr/ajax/nfs/openvoice/reviews/product/${sku} API isteği at, yorumları analiz et, ürün bilgisini ("isim" vs.) mutlaka çek. Genel memnuniyet skorunu ("averageAttributeRating" ile çekebilirsin) ve sentimenti net şekilde yaz (olumlu/olumsuz 2-3 madde). Yanıtı kısa ve özet tut, 3-4 satırı geçmesin. Do deep-research.`;
+    const prompt = `https://www.decathlon.com.tr/tr/ajax/nfs/openvoice/reviews/product/${sku} incele ve yorumları analiz et. Genel memnuniyet skorunu elde et ve sentimenti net şekilde yaz (olumlu/olumsuz 2-3 madde). Yanıtı kısa ve özet tut, 3-4 satırı geçmesin. Do deep-research.`;
     try {
       const response = await fetch("https://my-ai-agent-243439967412.europe-west1.run.app/ask", {
         method: "POST",
