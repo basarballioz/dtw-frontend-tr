@@ -73,7 +73,7 @@ export default function Header() {
               </div>
               <Input
                 type="text"
-                placeholder="ayakkabı"
+                placeholder="Bir ürün, marka, spor arayın..."
                 className="pl-10 pr-36 py-3 w-full rounded-full border-2 border-blue-200 focus:border-blue-400 bg-white shadow-md"
                 value={search}
                 onChange={handleInputChange}
