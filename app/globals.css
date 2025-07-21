@@ -136,7 +136,7 @@
 }
 
 .animate-spin-fast {
-  animation: spin-slow .5s linear infinite;
+  animation: spin-slow 3s linear infinite;
 }
 
 .animate-ai-glow {
