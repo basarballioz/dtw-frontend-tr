@@ -1,8 +1,8 @@
 "use client";
 
-import Header from "../components/Header";
-import Navigation from "../components/Navigation";
-import { categories } from "../data/constants";
+import Header from "@/components/common/Header";
+import Navigation from "@/components/common/Navigation";
+import { categories } from "@/data/constants";
 import { useState, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -1,10 +1,10 @@
 "use client";
 
-import Header from "./components/Header"
-import Navigation from "./components/Navigation"
-import FeatureCards from "./components/FeatureCards"
-import SearchExamples from "./components/SearchExamples"
-import { categories, searchExamples } from "./data/constants"
+import Header from "@/components/common/Header";
+import Navigation from "@/components/common/Navigation";
+import FeatureCards from "@/components/common/FeatureCards";
+import SearchExamples from "@/components/common/SearchExamples";
+import { categories, searchExamples } from "@/data/constants";
 
 export default function Home() {
   return (

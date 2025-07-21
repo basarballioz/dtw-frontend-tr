@@ -1,13 +1,13 @@
 "use client";
 
 import { Search, Brain, User, Heart, ShoppingCart, Sparkles, Settings2, Star, ShoppingCart as CartIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Badge } from "../ui/badge";
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { mockProducts } from "..//data/constants"
+import { mockProducts } from "@/data/constants"
 
 export default function Header() {
   const router = useRouter();
