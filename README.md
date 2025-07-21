@@ -92,15 +92,23 @@ public/               # Static assets (SVGs, images)
 
 ## 🤖 AI & API Integration
 
-- **AI Agent Endpoint:** 
-  - I used a custom GEMINI AI agent for API requests, but you can replace it with your own AI service if desired.
-  - The app communicates with an external AI agent via:
-    ```
-    POST https://my-ai-agent-243439967412.europe-west1.run.app/ask 
-    Content-Type: application/json
-    Body: { "query": "your-question-here" }
-    ```
-  - Used for both chat and review analysis features.
+- **API Architecture:** The application uses a client-server model for AI-powered features.
+  - **Client-Side:** The `askGemini` function in `src/lib/api.js` sends requests from the user's browser to our own backend.
+  - **Server-Side:** A Next.js API route at `app/api/ask-gemini/route.js` receives these requests. This route acts as a secure proxy, forwarding the request to the Google Gemini API using a private API key stored in environment variables.
+
+- **How it Works:**
+  1. A user action on the frontend (e.g., submitting a search query) calls the `askGemini` function.
+  2. `askGemini` makes a `POST` request to the `/api/ask-gemini` endpoint within the application.
+  3. The API route on the server receives the request, attaches the `GEMINI_API_KEY`, and sends it to the official Google Gemini API.
+  4. The response from Gemini is streamed back to the client, ensuring the API key is never exposed to the public.
+
+- **To use the AI features, you need to:**
+  1. Get a Google Gemini API key.
+  2. Create a `.env.local` file in the root of the project.
+  3. Add your API key to the file like this:
+     ```
+     GEMINI_API_KEY=your_api_key_here
+     ```
 
 ---
 
