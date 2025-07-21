@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Navigation from "../components/Navigation";
 import { categories } from "../data/constants";
 import { useState } from "react";
+import { askGemini } from "@/lib/api";
 
 // Decathlon linklerini markdown'dan çıkar
 function extractDecathlonLinks(md) {
@@ -227,16 +228,9 @@ export default function SearchPage() {
     setLoading(true);
     setAnswer("");
     try {
-      const payload = {
-        query: `merhaba müşterim bana parantez içerisindeki soruyu soruyor. Bu soruya decathlon.com.tr'yi baz alarak benim ağzımdan kısa bir cevap verebilir misin? Bu cevapta decathlon.com.tr'yi ziyaret et ve ürünlerinden tavsiyeler ver. 3500 karakteri geçmesin. En fazla 3 link öner. Derin analiz yapabilirsin. (Soru: ${search})`
-      };
-      const response = await fetch("https://my-ai-agent-243439967412.europe-west1.run.app/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const data = await response.json();
-      setAnswer(data.answer || "Cevap alınamadı.");
+      const prompt = `merhaba müşterim bana parantez içerisindeki soruyu soruyor. Bu soruya decathlon.com.tr'yi baz alarak benim ağzımdan kısa bir cevap verebilir misin? Bu cevapta decathlon.com.tr'yi ziyaret et ve ürünlerinden tavsiyeler ver. 3500 karakteri geçmesin. En fazla 3 link öner. Derin analiz yapabilirsin. (Soru: ${search})`;
+      const answer = await askGemini(prompt);
+      setAnswer(answer);
     } catch (err) {
       setAnswer("Hata oluştu: " + err.message);
     } finally {

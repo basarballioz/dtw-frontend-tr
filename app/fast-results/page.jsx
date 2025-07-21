@@ -6,6 +6,7 @@ import { categories } from "../data/constants";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { askGemini } from "@/lib/api";
 
 function renderMarkdown(md) {
   if (!md) return null;
@@ -109,13 +110,8 @@ export default function FastResultsPage() {
     setError("");
     const prompt = `https://www.decathlon.com.tr/tr/ajax/nfs/openvoice/reviews/product/${sku} incele ve yorumları analiz et. Genel memnuniyet skorunu elde et ve sentimenti net şekilde yaz (olumlu/olumsuz 2-3 madde). Yanıtı kısa ve özet tut, 3-4 satırı geçmesin. Do deep-research.`;
     try {
-      const response = await fetch("https://my-ai-agent-243439967412.europe-west1.run.app/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: prompt })
-      });
-      const data = await response.json();
-      setResult(data.answer || "Cevap alınamadı.");
+      const answer = await askGemini(prompt);
+      setResult(answer);
     } catch (err) {
       setError("Hata oluştu: " + err.message);
     } finally {
